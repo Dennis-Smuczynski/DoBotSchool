@@ -28,18 +28,18 @@ async function handleOPCUAServer() {
     namespace.addVariable({
         componentOf: device,
         browseName: "temperature",
-        dataType: "Double",
+        dataType: "String",
         value: {
-            get:  () => new Variant({dataType: DataType.Double, value: temperature})
+            get:  () => new Variant({dataType: DataType.String, value: temperature})
         }
     });
 
     namespace.addVariable({
         componentOf: device,
         browseName: "humidity",
-        dataType: "Double",
+        dataType: "String",
         value: {
-            get:  () => new Variant({dataType: DataType.Double, value: humidity})
+            get:  () => new Variant({dataType: DataType.String, value: humidity})
         }
     });
 
