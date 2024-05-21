@@ -2,6 +2,7 @@ from ctypes import *
 import time,  platform
 
 
+
 def enum(**enums):
     return type('Enum', (), enums)
 
