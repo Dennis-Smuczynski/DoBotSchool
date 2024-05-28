@@ -2,6 +2,7 @@
 import cv2
 import numpy as np
 
+
 def get_color_name(r, g, b):
     # Define color ranges in RGB format
     colors = {
@@ -22,42 +23,46 @@ def get_color_name(r, g, b):
 
     return closest_color
 
-# Define a video capture object
-vid = cv2.VideoCapture(0)
 
-while True:
-    # Capture the video frame by frame
-    ret, frame = vid.read()
+def capture_rgb():
+    # Define a video capture object
+    vid = cv2.VideoCapture(0)
 
-    # Check if the frame is captured correctly
-    if not ret:
-        print("Failed to capture frame")
-        break
+    while True:
+        # Capture the video frame by frame
+        ret, frame = vid.read()
 
-    # Display the resulting frame
-    cv2.imshow('frame', frame)
+        # Check if the frame is captured correctly
+        if not ret:
+            print("Failed to capture frame")
+            break
 
-    # Get the center pixel of the frame
-    height, width, _ = frame.shape
-    center_x, center_y = width // 2, height // 2
-    b, g, r = frame[center_y, center_x]
+        # Get the center pixel of the frame
+        height, width, _ = frame.shape
+        center_x, center_y = width // 2, height // 2
+        b, g, r = frame[center_y, center_x]
 
-    # Get the color name from the RGB values
-    color_name = get_color_name(r, g, b)
-    print(r, g, b, color_name)
-    #print(f"Detected color at center: {color_name}")
+        # Get the color name from the RGB values
+        color_name = get_color_name(r, g, b)
+        print(r, g, b, color_name)
 
-    # Draw a circle at the center of the frame
-    cv2.circle(frame, (center_x, center_y), 5, (0, 255, 0), 2)
+        # Draw a circle at the center of the frame
+        cv2.circle(frame, (center_x, center_y), 5, (0, 255, 0), 2)
 
-    # Display the resulting frame with the circle
-    cv2.imshow('frame', frame)
+        # Display the resulting frame with the circle
+        cv2.imshow('frame', frame)
 
-    # The 'q' button is set as the quitting button
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        # The 'q' button is set as the quitting button
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-# After the loop release the cap object
-vid.release()
-# Destroy all the windows
-cv2.destroyAllWindows()
+    # After the loop release the cap object
+    vid.release()
+    # Destroy all the windows
+    cv2.destroyAllWindows()
+
+    return r, g, b, color_name
+
+
+if __name__ == "__main__":
+    capture_rgb()

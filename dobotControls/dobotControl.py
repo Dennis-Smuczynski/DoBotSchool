@@ -1,4 +1,5 @@
 import DobotDllType as dType
+from .videoread import capture_rgb  # Import the capture_rgb function
 
 # Load Dll
 api = dType.load()
@@ -34,11 +35,15 @@ if state == dType.DobotConnect.DobotConnect_NoError:
 
     dType.SetPTPCmd(api, dType.PTPMode.PTPMOVLXYZMode, 200, 0, 0, 0, 1)
     print("Moved to initial position")
-    
-    if state == dType.DobotConnect.DobotConnect_NoError:
-        # Move to position (x=250, y=0, z=0, r=0)
+
+    # Capture RGB values from the camera
+    r, g, b, color_name = capture_rgb()
+    print(f"Captured RGB: ({r}, {g}, {b}) - Color name: {color_name}")
+
+    # Use the captured RGB values (example: move to a position based on color)
+    if color_name == "red":
         dType.SetPTPCmd(api, dType.PTPMode.PTPMOVLXYZMode, 250, 0, 0, 0, 1)
-        print("Moved to position (250, 0, 0)")
+        print("Moved to position (250, 0, 0) based on detected red color")
 
 # Always disconnect after operations
 dType.DisconnectDobot(api)
