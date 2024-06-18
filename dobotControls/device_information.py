@@ -6,7 +6,7 @@ from time import sleep
 
 from lib.interface import Interface
 
-bot = Interface('/dev/tty.SLAB_USBtoUART')
+bot = Interface('COM3')
 
 print('Bot status:', 'connected' if bot.connected() else 'not connected')
 
