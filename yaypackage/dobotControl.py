@@ -13,7 +13,7 @@ def connect_dobot():
     }
 
     # Replace 'COM3' with the appropriate port for your system
-    state = ConnectDobot(api, "COM9", 115200)[0]
+    state = ConnectDobot(api, "COM7", 115200)[0]
 
     print("Connect status:", CON_STR[state])
     if state == DobotConnect.DobotConnect_NoError:
