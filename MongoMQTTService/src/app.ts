@@ -11,7 +11,7 @@ const COLLECTION_NAME = "dobot"
 const MQTT_TOPIC = "presence"; // DeNiLo-Dobot
 
 const mongoClient = new MongoClient(MONGO_URL);
-const mqttClient: MqttClient = mqtt.connect("mqtt://82.165.106.209:1883");
+const mqttClient: MqttClient = mqtt.connect("mqtt://127.0.0.1:1883");
 const mongoService = new MongoService(mongoClient, DB_NAME, COLLECTION_NAME);
 
 const app = express()
