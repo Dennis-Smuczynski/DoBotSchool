@@ -13,7 +13,7 @@ def connect_dobot():
     }
 
     # Replace 'COM3' with the appropriate port for your system
-    state = ConnectDobot(api, "COM7", 115200)[0]
+    state = ConnectDobot(api, "COM9", 115200)[0]
 
     print("Connect status:", CON_STR[state])
     if state == DobotConnect.DobotConnect_NoError:
@@ -29,15 +29,22 @@ def scan_color_move_arm (api):
         # Clear all commands
         ClearAllAlarmsState(api)
 
-        # Set the Dobot to the initial position
-        SetPTPJointParams(api, 100, 100, 100, 100, 100, 100, 100, 100)
-        SetPTPCommonParams(api, 100, 100)
-        SetPTPCoordinateParams(api, 200, 200, 200, 200)
-
+        moveArmXYZR(api,250,-50,-40,0)
+        time.sleep(2)
+        turnOnSuction(api)
+        moveArmXYZR(api,250,-50,-58,0)
+        time.sleep(2)
+        moveArmXYZR(api,250,-50,-40,0)
+        
+        moveArmXYZR(api,100,100,30,0)
+        time.sleep(5)
+        turnOffSuction(api)
+        time.sleep(2)
+        
+    
         r, g, b, color_name = capture_rgb()
         print(f"Captured RGB: ({r}, {g}, {b}) - Color name: {color_name}")
-        SetPTPCmd(api, PTPMode.PTPMOVLXYZMode, 200, 0, 0, 0, 1)
-        print("grabbed block")
+        
         
         # Use the captured RGB values (example: move to a position based on color)
         match color_name:
@@ -53,3 +60,13 @@ def scan_color_move_arm (api):
         # Always disconnect after operations
         DisconnectDobot(api)
         return color_name
+
+def turnOnSuction(api):
+        SetEndEffectorSuctionCup( api, True, True, isQueued = 0)
+
+def turnOffSuction(api):
+        SetEndEffectorSuctionCup(api, True, False, isQueued = 0)
+
+def moveArmXYZR(api,x,y,z,r):
+        SetPTPCmd(api, PTPMode.PTPMOVLXYZMode, x, y, z, r)[0]
+
