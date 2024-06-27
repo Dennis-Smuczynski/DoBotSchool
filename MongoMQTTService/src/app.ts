@@ -1,16 +1,18 @@
-import mqtt from 'mqtt';
+import mqtt, {MqttClient} from 'mqtt';
 import {MongoClient, ObjectId} from 'mongodb'
 import express from 'express'
 import {MongoService} from "./mongoService";
+import { ICreateComponentObjectDto} from "./types";
 
 const MONGO_URL = "mongodb://127.0.0.1:27017";
 const DB_NAME = "test";
 const COLLECTION_NAME = "dobot"
 
-const MQTT_TOPIC = "DeNiLo-Dobot";
+const MQTT_TOPIC = "presence"; // DeNiLo-Dobot
 
 const mongoClient = new MongoClient(MONGO_URL);
-const mqttClient = mqtt.connect("mqtt://82.165.106.209:1883");
+const mqttClient: MqttClient = mqtt.connect("mqtt://82.165.106.209:1883");
+const mongoService = new MongoService(mongoClient, DB_NAME, COLLECTION_NAME);
 
 const app = express()
 const port = 3000
@@ -34,17 +36,21 @@ app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 5000
 main()
     .then(console.log)
     .catch(console.error)
-    .finally(() => mongoClient.close());
 
 
 app.post('/component', async (req, res) => {
-    const data = req.body;
-    console.log(data);
+    const data = req.body as ICreateComponentObjectDto;
 
-    await MongoService.insertComponent(data)
-    mqttClient.publish(MQTT_TOPIC, JSON.stringify({test: data.test}))
+    mqttClient.publish(MQTT_TOPIC, JSON.stringify(data))
+    await mongoService.insertComponent(data);
+    
     return res.status(200).json({})
 })
+
+app.get('/components', async (req, res) => {
+   const mongoData = await mongoService.getAllComponents()
+    return res.status(200).json(mongoData);
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
@@ -52,9 +58,9 @@ app.listen(port, () => {
 
 mqttClient.on("connect", () => {
     console.log("connect4ed to mqtt")
-    mqttClient.subscribe("presence", (err) => {
+    mqttClient.subscribe(MQTT_TOPIC, (err) => {
         if (!err) {
-            mqttClient.publish("presence", "Hello mqtt");
+            mqttClient.publish(MQTT_TOPIC, "Hello mqtt");
         }
     });
 });
@@ -70,7 +76,7 @@ mqttClient.on("error", (error) => {
 })
 
 async function main() {
-    await mongoClient.connect()
+    await mongoService.connect()
     console.log("Successfully connected to mongodb")
 }
 
