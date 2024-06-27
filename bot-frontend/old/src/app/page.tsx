@@ -36,7 +36,7 @@ export default function Home() {
         <div className={"d-flex justify-content-center align-items-center"}>
             Temperatur:
             Luftfeuchtigkeit:
-            <button onClick={handleSendTestData}>test</button>
+            {/*<button onClick={handleSendTestData}>test</button>*/}
             {/*<Button onClick={handleSendTestData}>Send test data</Button>*/}
         </div>
     );
