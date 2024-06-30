@@ -8,7 +8,7 @@ const MONGO_URL = "mongodb://127.0.0.1:27017";
 const DB_NAME = "test";
 const COLLECTION_NAME = "dobot"
 
-const MQTT_TOPIC = "presence"; // DeNiLo-Dobot
+const MQTT_TOPIC = "DeNiLo-Dobot"; // DeNiLo-Dobot
 
 const mongoClient = new MongoClient(MONGO_URL);
 const mqttClient: MqttClient = mqtt.connect("mqtt://127.0.0.1:1883");
