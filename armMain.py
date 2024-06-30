@@ -9,8 +9,7 @@ while True:
     selectedMode = input()
     if selectedMode == "1":
         
-        answer,scannedColor = "starting process...","green"
-        ##connect_dobot()
+        answer,scannedColor = connect_dobot()
         if answer == "error no connection":
             print("There was a problem when trying to connect to dobot, please try again")
         else:
