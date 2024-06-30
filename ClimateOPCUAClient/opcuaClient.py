@@ -1,5 +1,4 @@
 from opcua import Client
-import time
 
 def get_climate_data():
     # URL of the OPC UA server

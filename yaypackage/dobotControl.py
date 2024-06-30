@@ -12,61 +12,63 @@ def connect_dobot():
         DobotConnect.DobotConnect_Occupied: "DobotConnect_Occupied"
     }
 
-    # Replace 'COM3' with the appropriate port for your system
+    # Replace 'COM' with the appropriate port for your system
     state = ConnectDobot(api, "COM9", 115200)[0]
 
     print("Connect status:", CON_STR[state])
     if state == DobotConnect.DobotConnect_NoError:
-        return "moved arm to color space",scan_color_move_arm(api)
+        return "starting process...",scan_color_move_arm(api)
     else:
         return "error no connection","error"
     
 def scan_color_move_arm (api):
     
-        # Set command timeout
-        SetCmdTimeout(api, 3000)
+    # Set command timeout
+    SetCmdTimeout(api, 3000)
 
-        # Clear all commands
-        ClearAllAlarmsState(api)
+    # Clear all commands
+    ClearAllAlarmsState(api)
 
-        moveArmXYZR(api,250,-50,-40,0)
-        time.sleep(2)
-        turnOnSuction(api)
-        moveArmXYZR(api,250,-50,-58,0)
-        time.sleep(2)
-        moveArmXYZR(api,250,-50,-40,0)
-        
-        moveArmXYZR(api,100,100,30,0)
-        time.sleep(5)
-        turnOffSuction(api)
-        time.sleep(2)
-        
+    armMoveToStart(api)
     
-        r, g, b, color_name = capture_rgb()
-        print(f"Captured RGB: ({r}, {g}, {b}) - Color name: {color_name}")
-        
-        
-        # Use the captured RGB values (example: move to a position based on color)
-        match color_name:
-            case "red":
-                SetPTPCmd(api, PTPMode.PTPMOVLXYZMode, 250, 50, 0, 0, 1)   
-            case "blue":
-                SetPTPCmd(api, PTPMode.PTPMOVLXYZMode, 250, 100, 0, 0, 1)
-            case "green":
-                SetPTPCmd(api, PTPMode.PTPMOVLXYZMode, 250, 150, 0, 0, 1)
-            case "yellow":
-                SetPTPCmd(api, PTPMode.PTPMOVLXYZMode, 250, 200, 0, 0, 1)
-                
-        # Always disconnect after operations
-        DisconnectDobot(api)
-        return color_name
+    r, g, b, color = armPickAndMoveToSensor(api)
+    
+    armMoveToColorSpot(api,color)
+              
+    # Always disconnect after operations
+    DisconnectDobot(api)
+    
+    return color
+    
 
 def turnOnSuction(api):
-        SetEndEffectorSuctionCup( api, True, True, isQueued = 0)
+    SetEndEffectorSuctionCup( api, True, True, isQueued = 0)
 
 def turnOffSuction(api):
-        SetEndEffectorSuctionCup(api, True, False, isQueued = 0)
+    SetEndEffectorSuctionCup(api, True, False, isQueued = 0)
 
 def moveArmXYZR(api,x,y,z,r):
-        SetPTPCmd(api, PTPMode.PTPMOVLXYZMode, x, y, z, r)[0]
+    SetPTPCmd(api, PTPMode.PTPMOVLXYZMode, x, y, z, r)[0]
+        
+def getColor():
+    return capture_rgb()
+        
+def armMoveToStart(api):
+    moveArmXYZR(api,200,-50,-58,0)
+
+def armPickAndMoveToSensor(api):
+        turnOnSuction(api)
+        moveArmXYZR(api,250,-50,-58,0)
+        return getColor()
+    
+def armMoveToColorSpot(api,color_name):
+    match color_name:
+        case "red":
+            moveArmXYZR(api,250,-40,0,0) 
+        case "blue":
+            moveArmXYZR(api,250,-30,0,0) 
+        case "green":
+            moveArmXYZR(api,250,-20,0,0) 
+        case "yellow":
+            moveArmXYZR(api,250,-10,0,0) 
 

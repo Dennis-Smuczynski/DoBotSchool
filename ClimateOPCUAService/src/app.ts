@@ -59,14 +59,14 @@ async function getTemperatureAndHumidity() {
         // const res = await sensor.read(22, 4);
         const res = {temperature: 50, humidity: 60}
         return {
-            temp: `${res.temperature.toFixed(1)}°C`,
-            humidity: `${res.humidity.toFixed(1)}%`
+            temp: `${res.temperature.toFixed(1)}`,
+            humidity: `${res.humidity.toFixed(1)}`
         }
     } catch (err) {
         console.error("Failed to read sensor data:", err);
         return {
-            temp: `-0°C`,
-            humidity: `-0%`
+            temp: `-0`,
+            humidity: `-0`
         }
     }
 }
