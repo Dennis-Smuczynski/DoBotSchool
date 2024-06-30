@@ -1,7 +1,6 @@
 
 from yaypackage import get_climate_data,connect_dobot
 import pip._vendor.requests as requests
-import json
 
 while True:
     print("Please select a mode")
