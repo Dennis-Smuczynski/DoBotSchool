@@ -1,6 +1,7 @@
 
 from yaypackage import get_climate_data,connect_dobot
 import pip._vendor.requests as requests
+import json
 
 while True:
     print("Please select a mode")
@@ -24,11 +25,12 @@ while True:
             }
             collectedDataDict = {
                 "color": scannedColor,
-                "climate": climateDict.copy(),
-                "currentEnergyCost":currentData["marketprice"]  
+                "climate": {"temperature":float(temperature),
+                            "humidity":float(humidity)},
+                "currentEnergyCost":currentData["marketprice"]
             }
-            print(collectedDataDict)
-            requests.post("http://82.165.106.209:3000/component", collectedDataDict)
+            requests.post("http://82.165.106.209:3000/component", json=collectedDataDict)
+              
     else:
         print("Exiting...")
         break
