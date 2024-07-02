@@ -1,6 +1,6 @@
 import {DataType, OPCUAServer, Variant} from "node-opcua";
 
-// import sensor from "node-dht-sensor";
+import sensor from "node-dht-sensor";
 
 const server = new OPCUAServer({
     port: 4334, // the port of the listening socket of the server
@@ -56,8 +56,8 @@ handleOPCUAServer()
 
 async function getTemperatureAndHumidity() {
     try {
-        // const res = await sensor.read(22, 4);
-        const res = {temperature: 50, humidity: 60}
+        const res = await sensor.read(22, 4);
+        // const res = {temperature: 50, humidity: 60}
         return {
             temp: `${res.temperature.toFixed(1)}`,
             humidity: `${res.humidity.toFixed(1)}`
