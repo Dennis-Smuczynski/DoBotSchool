@@ -36,7 +36,7 @@ def capture_rgb():
     
     
     # Get the center pixel of the frame
-    height, width = frame.shape()
+    height, width, _ = frame.shape
     center_x, center_y = width // 2, height // 2
     b, g, r = frame[center_y, center_x]
 
