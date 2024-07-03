@@ -1,5 +1,5 @@
 
-from yaypackage import get_climate_data,connect_dobot,capture_rgb
+from yaypackage import get_climate_data,connect_dobot
 import pip._vendor.requests as requests
 
 while True:
@@ -8,17 +8,16 @@ while True:
     print("Use (2) to exit")
     selectedMode = input()
     if selectedMode == "1":
-        
-        answer,scannedColor = "test", "red"
-        ##connect_dobot()
-        print(capture_rgb())
+        answer,scannedColor = connect_dobot()
         if answer == "error no connection":
             print("There was a problem when trying to connect to dobot, please try again")
         else:
             print(answer)
             print(scannedColor)
-            temperature, humidity = 60.0,50.0
-            #get_climate_data()
+            temperature, humidity = get_climate_data()
+            response = requests.get("https://api.awattar.at/v1/marketdata")
+            responseObject = eval(response.text)
+            currentData = responseObject["data"][0]
             climateDict = {
                 "temperature":float(temperature),
                 "humidity":float(humidity)
@@ -27,7 +26,7 @@ while True:
                 "color": scannedColor,
                 "climate": {"temperature":float(temperature),
                             "humidity":float(humidity)},
-                "currentEnergyCost":0.36
+                "currentEnergyCost":currentData["marketprice"]
             }
             requests.post("http://82.165.106.209:3000/component", json=collectedDataDict)
               
