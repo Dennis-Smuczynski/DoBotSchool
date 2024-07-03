@@ -1,6 +1,7 @@
 # Import the OpenCV and numpy libraries
 import cv2
 import numpy as np
+import time
 
 
 def get_color_name(r, g, b):
@@ -35,7 +36,7 @@ def capture_rgb():
     
     
     # Get the center pixel of the frame
-    height, width, _ = frame.shape
+    height, width = frame.shape()
     center_x, center_y = width // 2, height // 2
     b, g, r = frame[center_y, center_x]
 
@@ -48,7 +49,6 @@ def capture_rgb():
 
     # Display the resulting frame with the circle
     cv2.imshow('frame', frame)    
-
     # After the loop release the cap object
     vid.release()
     # Destroy all the windows

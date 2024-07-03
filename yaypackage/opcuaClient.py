@@ -3,11 +3,11 @@ import time
 
 def get_climate_data():
     # URL of the OPC UA server
-    url = "opc.tcp://localhost:4334/UA/MyLittleServer"
+    url = "opc.tcp://172.20.10.10:4334/UA/MyLittleServer"
 
     # Create a client instance
     client = Client(url)
-
+    
     try:
         # Connect to the server
         client.connect()
